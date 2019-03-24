@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nibudong.mapper.EmployeeMapper">
+
+<insert id="register">
+	insert into t_employee(id,username,realname,pass,telphone,address,descript,register_date) values(#{id},#{username},#{realname},#{pass},#{telphone},#{address},#{descript},#{registerDate}) 
+</insert>
+<select id="getEmpByName" resultType="com.nibudong.pojo.Employee">
+	select * from t_employee where username=#{username}
+</select>
+<select id="getEmpById" resultType="com.nibudong.pojo.Employee">
+	select * from t_employee where id=#{id}
+</select>
+<select id="getAllEmps" resultType="com.nibudong.pojo.Employee">
+	select * from t_employee
+</select>
+<update id="updateEmp" parameterType="com.nibudong.pojo.Employee">
+	UPDATE t_employee
+	SET username=#{username},realname=#{realname},telphone=#{telphone}
+	WHERE id=#{id}
+</update>
+<delete id="deleteEmp" parameterType="java.lang.String">
+	delete from t_employee where id=#{id}
+</delete>
+</mapper>

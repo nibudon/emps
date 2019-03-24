@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nibudong.mapper.InfoMapper">
+<resultMap id="InfoWithEmp" type="com.nibudong.pojo.Info">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="e_id" jdbcType="VARCHAR" property="empId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="sub_time" jdbcType="VARCHAR" property="subTime" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+	<result column="is_out" jdbcType="VARCHAR" property="isOut" />
+  	<association property="employee" column="e_id" javaType="com.nibudong.pojo.Employee">
+			<id property="id" column="id"></id>
+			<result property="username" column="username"></result>
+			<result property="realname" column="realname"></result>
+			<result property="pass" column="pass"></result>
+			<result property="telphone" column="telphone"></result>
+			<result property="address" column="address"></result>
+			<result property="descript" column="descript"></result>
+			<result property="registerDate" column="register_date"></result>
+	</association>
+</resultMap>
+
+  <insert id="addInfo" parameterType="com.nibudong.pojo.Info">
+  	INSERT INTO t_info(id,e_id,title,sub_time,content) VALUES(#{id},#{empId},#{title},#{subTime},#{content})
+  </insert>
+  <select id="getAllInfo" resultMap="InfoWithEmp">
+  	SELECT	info.id,info.e_id,info.title,info.sub_time,info.content,info.is_out,emp.id,emp.username,emp.realname,emp.pass,emp.telphone,emp.register_date,emp.address,emp.descript
+	FROM t_info info
+	LEFT JOIN t_employee emp
+	ON info.e_id=emp.id
+  </select>
+	<select id="searchInfo" resultMap="InfoWithEmp">
+  	SELECT	info.id,info.e_id,info.title,info.sub_time,info.content,info.is_out,emp.id,emp.username,emp.realname,emp.pass,emp.telphone,emp.register_date,emp.address,emp.descript
+	FROM t_info info
+	LEFT JOIN t_employee emp
+	ON info.e_id=emp.id
+	HAVING emp.username LIKE #{key} OR emp.realname LIKE #{key} OR info.content LIKE #{key} OR info.sub_time LIKE #{key}
+  </select>
+  <select id="getMyInfos" resultMap="InfoWithEmp">
+  	SELECT	info.id,info.e_id,info.title,info.sub_time,info.content,info.is_out,emp.id,emp.username,emp.realname,emp.pass,emp.telphone,emp.register_date,emp.address,emp.descript
+	FROM t_info info
+	LEFT JOIN t_employee emp
+	ON info.e_id=emp.id
+	WHERE emp.id=#{id}
+  </select>
+	<update id="outInfo" parameterType="java.lang.String">
+		UPDATE t_info SET is_out="1" WHERE id=#{id}
+	</update>
+
+	<select id="getOutInfos" resultMap="InfoWithEmp">
+		SELECT	info.id,info.e_id,info.title,info.sub_time,info.content,info.is_out,emp.id,emp.username,emp.realname,emp.pass,emp.telphone,emp.register_date,emp.address,emp.descript
+		FROM t_info info
+		LEFT JOIN t_employee emp
+		ON info.e_id=emp.id
+		where info.is_out="1"
+	</select>
+
+</mapper>
